@@ -125,6 +125,24 @@ class MessageRepoImpl @Inject constructor(
             Results.Failure(e.message ?: "Image upload failed")
         }
     }
+    override suspend fun deleteMessage(
+        channelId: String,
+        messageId: String
+    ): Results<Unit> {
+        return try {
+            database
+                .getReference("message")
+                .child(channelId)
+                .child(messageId)
+                .removeValue()
+                .await()
+
+            Results.Success(Unit)
+        } catch (e: Exception) {
+            Results.Failure(e.message ?: "Failed to delete message")
+        }
+    }
+
 
 
 

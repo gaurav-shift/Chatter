@@ -28,6 +28,7 @@ import com.example.chatter.DomainLayer.model.Message
 import com.example.chatter.DomainLayer.util.Results
 import com.example.chatter.Presentation.Components.ChatComponent.ChatMessage
 import com.example.chatter.Presentation.Components.ChatComponent.ContentSelectionDialog
+import com.example.chatter.Presentation.Components.ChatComponent.DeleteMessageDialog
 import com.google.firebase.auth.auth
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -42,6 +43,10 @@ fun ChatScreen(navController: NavController , channelId: String){
     ) {
         val viewModel: ChatViewModel = hiltViewModel()
         val messageState by viewModel.messageState.collectAsState()
+
+        val showDeleteDialog = remember { mutableStateOf(false) }
+        val selectedMessageId = remember { mutableStateOf<String?>(null) }
+
 
         val chooserDialog = remember { mutableStateOf(false) }
         val cameraImageUri = remember { mutableStateOf<Uri?>(null) }
@@ -104,6 +109,10 @@ fun ChatScreen(navController: NavController , channelId: String){
                             viewModel.sendMessage(channelId, msgg)
                         }, onPickImage = {
                             chooserDialog.value = true
+                        },
+                        onLongPressMessage = { messageId ->
+                            selectedMessageId.value = messageId
+                            showDeleteDialog.value = true
                         })
                 }
             }
@@ -127,6 +136,20 @@ fun ChatScreen(navController: NavController , channelId: String){
                     chooserDialog.value = false
                 })
         }
+        if (showDeleteDialog.value && selectedMessageId.value != null) {
+            DeleteMessageDialog(
+                onConfirm = {
+                    viewModel.deleteMessage(channelId, selectedMessageId.value!!)
+                    showDeleteDialog.value = false
+                },
+                onDismiss = {
+                    showDeleteDialog.value = false
+                }
+            )
+        }
+
+
+
 
     }
 

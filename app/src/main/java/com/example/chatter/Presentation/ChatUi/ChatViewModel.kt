@@ -5,6 +5,7 @@ import com.example.chatter.DomainLayer.usecase.SendImageMessageUseCase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatter.DomainLayer.model.Message
+import com.example.chatter.DomainLayer.usecase.DeleteMessageUseCase
 import com.example.chatter.DomainLayer.usecase.GetMessageUseCase
 import com.example.chatter.DomainLayer.usecase.SendMessageUseCase
 import com.example.chatter.DomainLayer.util.Results
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val getMessagesUseCase: GetMessageUseCase,
     private val sendMessageUseCase: SendMessageUseCase,
-    private val sendImageMessageUseCase: SendImageMessageUseCase
+    private val sendImageMessageUseCase: SendImageMessageUseCase,
+    private val deleteMessageUseCase: DeleteMessageUseCase
 
 ) : ViewModel(){
     private val _messageState = MutableStateFlow<Results<List<Message>>>(Results.Loading)
@@ -41,6 +43,11 @@ class ChatViewModel @Inject constructor(
     fun sendImage(channelId: String, imageUri: Uri) {
         viewModelScope.launch {
             sendImageMessageUseCase(channelId, imageUri)
+        }
+    }
+    fun deleteMessage(channelId: String, messageId: String) {
+        viewModelScope.launch {
+            deleteMessageUseCase(channelId, messageId)
         }
     }
 

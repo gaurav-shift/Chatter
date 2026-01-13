@@ -37,7 +37,8 @@ import com.example.chatter.ui.theme.DarkGray
 fun ChatMessage(
     messages: List<Message>,
     onSendMessage: (String) -> Unit,
-    onPickImage:() -> Unit
+    onPickImage:() -> Unit,
+    onLongPressMessage:(String)-> Unit
 ) {
     var msg by remember { mutableStateOf("") }
     Column(
@@ -53,7 +54,9 @@ fun ChatMessage(
             reverseLayout = true   // newest at bottom
         ) {
             items(messages.reversed()) { message ->
-                ChatBubble(message = message)
+                ChatBubble(message = message, onLongPress = {
+                    onLongPressMessage(message.id)
+                })
             }
         }
 

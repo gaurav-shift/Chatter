@@ -1,7 +1,9 @@
 package com.example.chatter.Presentation.Components.ChatComponent
 
+import android.R.id.message
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -33,6 +35,7 @@ import androidx.compose.ui.draw.clip
 @Composable
 fun ChatBubble(
     message: Message,
+    onLongPress:() -> Unit
 ) {
     val isMyMessage = message.senderId == Firebase.auth.currentUser?.uid
 
@@ -40,11 +43,16 @@ fun ChatBubble(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp, horizontal = 8.dp),
+
         horizontalArrangement = if (isMyMessage) Arrangement.End else Arrangement.Start
     ) {
 
         Box(
             modifier = Modifier
+                .combinedClickable(
+                    onClick = {},
+                    onLongClick = {onLongPress()}
+                )
                 .padding(12.dp)
                 .widthIn(max = 280.dp)
         ) {

@@ -18,4 +18,9 @@ interface MessageRepository {
         channelId: String,
         imageUri: Uri
     ) : Results<Unit>
+    suspend fun deleteMessage(
+        channelId: String,
+        messageId: String
+    ): Results<Unit>
+
 }
